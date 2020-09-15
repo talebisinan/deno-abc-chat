@@ -65,6 +65,11 @@
     ws.onmessage = function (evt) {
       let out = document.getElementById("output");
       out.innerHTML += evt.data + "<br>";
+
+      var sceneEl = document.querySelector("a-scene");
+      const chatEl = sceneEl.querySelector("#chat");
+      const currentVal = chatEl.getAttribute("value");
+      chatEl.setAttribute("value", currentVal + "\n" + evt.data);
     };
 
     function myFunction() {
