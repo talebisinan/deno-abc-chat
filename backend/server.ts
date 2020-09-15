@@ -40,4 +40,8 @@ const chat: HandlerFunc = async (c) => {
 
 console.log("server listening on http://localhost:8080");
 
-app.get("/chat", chat).file("/", "./frontend/index.html").start({ port: 8080 });
+app.static("/", "./frontend/assets")
+  .get("/chat", chat).file(
+    "/",
+    "./frontend/index.html",
+  ).start({ port: 8080 });

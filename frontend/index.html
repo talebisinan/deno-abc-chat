@@ -2,18 +2,44 @@
   <meta charset="utf-8" />
   <title>WebSocket</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <script src="aframe.min.js"></script>
 </head>
 
 <body>
+  <a-scene embedded background="color: #ECECEC" style="max-height: 60vh">
+    <a-assets>
+      <img id="shadow" src="img/radial-shadow-2.png" />
+    </a-assets>
+
+    <a-entity position="0 0 -11" rotation="0 0 0">
+      <a-text
+        position="0 3 6"
+        id="chat"
+        color="#000080"
+        value="The quick brown fox jumps over the lazy dog"
+        geometry="primitive:plane"
+      >
+      </a-text>
+    </a-entity>
+    <!-- Cube shadow -->
+    <a-image
+      id="shadow"
+      position="0 -14 0"
+      src="#shadow"
+      opacity="1"
+      rotation="-90 0 0"
+      scale="14 14 14"
+    ></a-image>
+  </a-scene>
+
   <textarea
     id="myText"
     placeholder="Type message"
-    style="height: 40px; width: 100%; margin-bottom: 26px; min-height: 150px"
+    style="height: 25vh; width: 100%; margin-bottom: 26px; min-height: 150px"
   ></textarea>
-  <br />
-  <button onclick="myFunction()" style="width: 100%; height: 36px">Send</button>
-  <p id="output"></p>
+  <button onclick="myFunction()" style="width: 100%; height: 5vh">Send</button>
 
+  <p id="output"></p>
   <script>
     const loc = window.location;
     let uri = "ws:";
@@ -37,13 +63,17 @@
       console.log("error", e);
     };
     ws.onmessage = function (evt) {
-      console.log(evt);
       let out = document.getElementById("output");
       out.innerHTML += evt.data + "<br>";
     };
 
     function myFunction() {
+      var sceneEl = document.querySelector("a-scene");
+      const chatEl = sceneEl.querySelector("#chat");
+      const currentVal = chatEl.getAttribute("value");
       const inputValue = document.getElementById("myText").value;
+      chatEl.setAttribute("value", currentVal + "\n" + inputValue);
+
       ws.send(inputValue);
       document.getElementById("myText").value = "";
       document.getElementById("myText").focus();
