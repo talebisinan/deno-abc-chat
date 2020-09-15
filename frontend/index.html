@@ -1,0 +1,52 @@
+<head>
+  <meta charset="utf-8" />
+  <title>WebSocket</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+</head>
+
+<body>
+  <textarea
+    id="myText"
+    placeholder="Type message"
+    style="height: 40px; width: 100%; margin-bottom: 26px; min-height: 150px"
+  ></textarea>
+  <br />
+  <button onclick="myFunction()" style="width: 100%; height: 36px">Send</button>
+  <p id="output"></p>
+
+  <script>
+    const loc = window.location;
+    let uri = "ws:";
+
+    if (loc.protocol === "https:") {
+      uri = "wss:";
+    }
+    uri += "//" + loc.host;
+    uri += loc.pathname + "chat";
+
+    const ws = new WebSocket(uri);
+
+    ws.onopen = function (e) {
+      console.log("Connected", e);
+    };
+
+    ws.onclose = function (e) {
+      console.log("closed", e);
+    };
+    ws.onerror = function (e) {
+      console.log("error", e);
+    };
+    ws.onmessage = function (evt) {
+      console.log(evt);
+      let out = document.getElementById("output");
+      out.innerHTML += evt.data + "<br>";
+    };
+
+    function myFunction() {
+      const inputValue = document.getElementById("myText").value;
+      ws.send(inputValue);
+      document.getElementById("myText").value = "";
+      document.getElementById("myText").focus();
+    }
+  </script>
+</body>
